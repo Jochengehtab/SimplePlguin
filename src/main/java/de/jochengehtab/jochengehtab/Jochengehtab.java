@@ -1,9 +1,6 @@
 package de.jochengehtab.jochengehtab;
 
-import de.jochengehtab.jochengehtab.Commands.DiscordCommand;
-import de.jochengehtab.jochengehtab.Commands.FeedCommand;
-import de.jochengehtab.jochengehtab.Commands.GameModeCommand;
-import de.jochengehtab.jochengehtab.Commands.HealCommand;
+import de.jochengehtab.jochengehtab.Commands.*;
 import de.jochengehtab.jochengehtab.TabCompleter.GameModeTabCompleter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
@@ -36,6 +33,7 @@ public final class Jochengehtab extends JavaPlugin {
         registerCommand("feed", new FeedCommand());
         registerCommand("gm", new GameModeCommand());
         registerCommand("discord", new DiscordCommand());
+        registerCommand("time", new TimeCommand());
     }
 
     private void registerTabCompleters(){
