@@ -2,3 +2,7 @@ name: Jochengehtab
 version: '${project.version}'
 main: de.jochengehtab.jochengehtab.Jochengehtab
 api-version: 1.19
+commands:
+  heal:
+  feed:
+  gm:
