@@ -6,17 +6,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class FeedCommand implements CommandExecutor {
+public class DiscordCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (!(sender instanceof Player)){
             sender.sendMessage(ChatColor.RED + "You must be a player to use this command.");
         }
-
-        Player player = (Player) sender;
-        player.setFoodLevel(20);
-
+        
+        sender.sendMessage(ChatColor.BLUE + "Join our" + ChatColor.GREEN + " Discord " + ChatColor.BLUE + "Server" + ChatColor.YELLOW + ChatColor.UNDERLINE + "https://discord.gg/BxHPrvN4" + ChatColor.BLUE + ".");
+        
         return true;
     }
 }

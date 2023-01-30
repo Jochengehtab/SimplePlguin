@@ -1,5 +1,6 @@
 package de.jochengehtab.jochengehtab;
 
+import de.jochengehtab.jochengehtab.Commands.DiscordCommand;
 import de.jochengehtab.jochengehtab.Commands.FeedCommand;
 import de.jochengehtab.jochengehtab.Commands.GameModeCommand;
 import de.jochengehtab.jochengehtab.Commands.HealCommand;
@@ -20,6 +21,7 @@ public final class Jochengehtab extends JavaPlugin {
         instance = this;
         registerCommands();
         registerEvents();
+        registerTabCompleters();
     }
 
     @Override
@@ -33,6 +35,7 @@ public final class Jochengehtab extends JavaPlugin {
         registerCommand("heal", new HealCommand());
         registerCommand("feed", new FeedCommand());
         registerCommand("gm", new GameModeCommand());
+        registerCommand("discord", new DiscordCommand());
     }
 
     private void registerTabCompleters(){
