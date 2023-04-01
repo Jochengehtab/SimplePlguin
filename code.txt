@@ -1,0 +1,111 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+public class Stockfish {
+
+    private Process engineProcess;
+    private BufferedReader processReader;
+    private OutputStreamWriter processWriter;
+
+    private static final String PATH = "/path/to/stockfish"; // Pfad zu Stockfish angeben
+
+    public void startEngine() {
+        try {
+            engineProcess = Runtime.getRuntime().exec(PATH);
+            processReader = new BufferedReader(new InputStreamReader(engineProcess.getInputStream()));
+            processWriter = new OutputStreamWriter(engineProcess.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopEngine() {
+        try {
+            processWriter.write("quit\n");
+            processWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getBestMove(String fen, int depth) {
+        String move = null;
+        try {
+            processWriter.write("position fen " + fen + "\n");
+            processWriter.flush();
+
+            processWriter.write("go depth " + depth + "\n");
+            processWriter.flush();
+
+            String line;
+            while ((line = processReader.readLine()) != null) {
+                if (line.contains("bestmove")) {
+                    move = line.split(" ")[1];
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return move;
+    }
+
+    public String evaluateMove(String fen, String move, int depth) {
+        String evaluation = null;
+        try {
+            processWriter.write("position fen " + fen + "\n");
+            processWriter.flush();
+
+            processWriter.write("go depth " + depth + "\n");
+            processWriter.flush();
+
+            String bestMove = null;
+            int score = 0;
+            String line;
+            while ((line = processReader.readLine()) != null) {
+                if (line.contains("bestmove")) {
+                    bestMove = line.split(" ")[1];
+                    break;
+                } else if (line.contains("score cp")) {
+                    score = Integer.parseInt(line.split("score cp ")[1].split(" ")[0]);
+                }
+            }
+
+            if (move.equals(bestMove)) {
+                evaluation = "Bester Zug";
+                if (score >= 900) {
+                    evaluation += ", brillianter Zug";
+                } else if (score >= 500) {
+                    evaluation += ", toller Zug";
+                }
+            } else if (score <= -300) {
+                evaluation = "Patzer";
+            } else if (score <= -100) {
+                evaluation = "Fehler";
+            } else if (score < 0) {
+                evaluation = "Ungenauigkeit";
+            } else {
+                evaluation = "Gut";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return evaluation;
+    }
+
+    public static void main(String[] args) {
+        Stockfish stockfish = new Stockfish();
+        stockfish.startEngine();
+
+        String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; // Startposition
+        int depth = 15; // Analysetiefe
+
+        String move = "e2e4"; // Zug zum Bewerten
+        String evaluation = stockfish.evaluateMove(fen, move, depth);
+        System.out.println(move + ": " + evaluation);
+
+        stockfish.stopEngine();
+    }
+}
